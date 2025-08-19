@@ -5,7 +5,8 @@ import Layout from "./Layouts/Layout";
 import MoveBoxes from "./pages/MoveBoxes";
 import Home from "./pages/Home";
 import NotFoundPage from "./pages/NotFoundPage";
-import React from "react";
+import TaskV from "./pages/TaskV";
+
 export default function App() {
   return (
     <div className="App">
@@ -19,7 +20,7 @@ export default function App() {
 
             {/* 普通路由 */}
             <Route path="drag-between-containers" element={<MoveBoxes />} />
-
+            <Route path="taskV" element={<TaskV />} />
             {/* 404 页面 */}
             <Route path="*" element={<NotFoundPage />} />
           </Route>

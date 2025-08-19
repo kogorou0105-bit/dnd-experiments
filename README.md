@@ -61,7 +61,7 @@ function Draggable({ id }) {
 }
 ```
 
-## demo --元素在两个容器间拖来拖去
+## 2.demo --元素在两个容器间拖来拖去
 
 ![alt text](image.png)
 直接看代码吧：
@@ -166,3 +166,117 @@ const Test1 = () => {
   ```
 
   可以看到，dnd 会给开发者提供的函数传入一个 event 参数，从这个参数里，我们可以拿到被拖动的元素（active）和被拖入的区域（over）
+
+## 3.demo --拖拽排序
+
+与第一个 demo 不同是，拖拽排序中，列表的元素必须既是可拖拽元素又是可拖入区域。因此，我们需要设计以下组件
+
+```jsx
+export default function DraggableDroppableItem({ id, title }) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef: setDragRef,
+    transform,
+  } = useDraggable({ id });
+
+  const { setNodeRef: setDropRef, isOver } = useDroppable({ id });
+
+  // 合并 draggable 和 droppable 的 ref
+  const setRefs = useCallback(
+    (node) => {
+      setDragRef(node);
+      setDropRef(node);
+    },
+    [setDragRef, setDropRef]
+  );
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+  };
+
+  return (
+    <div
+      ref={setRefs}
+      style={style}
+      {...listeners}
+      {...attributes}
+      className="task"
+    >
+      <input type="checkbox" className="checkbox" />
+      {title}
+    </div>
+  );
+}
+```
+
+可以看到，上面的组件使用了 dnd 提供的两个钩子函数导出的元素节点选中函数，来使这个组件变得可拖拽、可拖入。接着，我们使用一个组件来渲染、存放多个列表元素
+
+```jsx
+export const ColumnV = ({ tasks }) => {
+  return (
+    <div className="column">
+      {tasks.map((task) => (
+        <DraggableDroppableItem key={task.id} id={task.id} title={task.title} />
+      ))}
+    </div>
+  );
+};
+```
+
+然后就是根组件
+
+```jsx
+export default function TaskV() {
+  const [tasks, setTasks] = useState([
+    { id: 1, title: "Add tests to homepage" },
+    { id: 2, title: "Fix styling in about section" },
+    { id: 3, title: "Learn how to center a div" },
+  ]);
+
+  const addTask = (title) => {
+    setTasks((tasks) => [...tasks, { id: tasks.length + 1, title }]);
+  };
+
+  function handleDragEnd(event) {
+    const { active, over } = event;
+
+    if (!over || active.id === over.id) return;
+
+    setTasks((prev) => {
+      const oldIndex = prev.findIndex((item) => item.id === active.id);
+      const newIndex = prev.findIndex((item) => item.id === over.id);
+
+      const updated = [...prev];
+      const [moved] = updated.splice(oldIndex, 1);
+      updated.splice(newIndex, 0, moved);
+
+      return updated;
+    });
+  }
+  return (
+    <div className="tasks">
+      <h1>My TaskVillia ✅</h1>
+      <Input onSubmit={addTask} />
+      <DndContext onDragEnd={handleDragEnd}>
+        <ColumnV id="toDo" tasks={tasks} />
+      </DndContext>
+    </div>
+  );
+}
+```
+
+#### 上述代码还是那几件事情：
+
+- 1.状态管理
+  ```js
+  const [tasks, setTasks] = useState([
+    { id: 1, title: "Add tests to homepage" },
+    { id: 2, title: "Fix styling in about section" },
+    { id: 3, title: "Learn how to center a div" },
+  ]);
+  ```
+- 2.渲染
+- 3.事件处理函数
+
+存在的问题：大家在看这个 demo 时，发现拖拽过程中并没有动画效果，亟待解决....

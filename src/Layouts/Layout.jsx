@@ -8,8 +8,9 @@ const Layout = () => {
       <header>
         <Link to="/">Home</Link>
         <ul className="nav">
-          <Link to="/tasks">Tasks</Link>
           <Link to="/drag-between-containers">drag-between-containers</Link>
+          <Link to="/taskV">TaskV</Link>
+          <Link to="/tasks">Tasks</Link>
         </ul>
       </header>
       <Outlet />

@@ -50,7 +50,7 @@ export default function Tasks() {
       <h1>My Tasks ✅</h1>
       <Input onSubmit={addTask} />
       <DndContext
-        sensors={sensors}
+        // sensors={sensors}
         collisionDetection={closestCorners}
         onDragEnd={handleDragEnd}
       >
