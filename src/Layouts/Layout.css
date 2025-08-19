@@ -1,0 +1,23 @@
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+.layout {
+  width: 70%;
+}
+
+.nav {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+  justify-content: space-between;
+  align-items: center;
+}
+.nav a {
+  text-decoration: none;
+  cursor: pointer;
+  color: #000;
+  font-weight: bold;
+}

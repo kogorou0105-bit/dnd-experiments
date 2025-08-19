@@ -1,0 +1,20 @@
+.tasks {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.tasks h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.tasks .container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+.tasks .column {
+  margin: 0 auto;
+}
